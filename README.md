@@ -60,7 +60,9 @@ C++로 다양한 기본 자료구조를 직접 구현하고 정리한 프로젝�
 
 - **특징**:
   - 선입선출 (FIFO: First In First Out)
-
+  - Front, Back 위치에서만 삽입/삭제 가능
+  - Front, Back 확인: `O(1)` 
+  
 - **종류**:
   - 일반 큐 (Queue)
   - 덱 (Deque, 양방향 큐)
