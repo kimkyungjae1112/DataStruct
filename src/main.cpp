@@ -10,6 +10,7 @@ int main()
     list::SinglyLinkedList_Test();
     list::DoublyLinkedList_Test();
     queue::Queue_Test();
+    queue::Deque_Test();
     stack::Stack_Test();
     bst::BST_Test();
     
