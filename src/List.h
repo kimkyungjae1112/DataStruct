@@ -1,7 +1,7 @@
 #include <iostream>
 using namespace std;
 
-namespace list
+namespace list_my
 {
 
 template<typename T>
