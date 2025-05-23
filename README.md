@@ -86,7 +86,7 @@ C++로 다양한 기본 자료구조를 직접 구현하고 정리한 프로젝�
   - 평균: 검색/삽입/삭제 `O(1)`
   - 최악: `O(N)` (충돌 심한 경우)
 
-🔗 [소스 코드 보기](#)
+🔗 [소스 코드 보기](https://github.com/kimkyungjae1112/DataStruct/blob/master/src/HashTable.h)
 
 ---
 
