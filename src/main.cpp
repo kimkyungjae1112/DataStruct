@@ -1,9 +1,9 @@
-#include "BinarySearchTree.h"
-#include "Array.h"
-#include "List.h"
-#include "Stack.h"
-#include "Queue.h"
-#include "HashTable.h"
+#include "../Tree/Tree.h"
+#include "../Array/Array.h"
+#include "../List/List.h"
+#include "../Stack/Stack.h"
+#include "../Queue/Queue.h"
+#include "../HashTable/HashTable.h"
 
 int main()
 {
