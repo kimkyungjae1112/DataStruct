@@ -1,7 +1,7 @@
 #include <iostream>
 using namespace std;
 
-namespace queue
+namespace queue_my
 {
 
 template <typename T>
