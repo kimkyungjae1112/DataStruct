@@ -1,5 +1,140 @@
 #include <iostream>
+#include <queue>
 using namespace std;
+
+namespace bt
+{
+
+template <typename T>
+struct Node
+{
+	Node(const T& Data) : Data(Data), Left(nullptr), Right(nullptr) { }
+
+	T Data;
+	Node* Left;
+	Node* Right;
+};
+
+template<typename T>
+class BinaryTree
+{
+public:
+	BinaryTree() : Root(nullptr), Size(0) {}
+
+	BinaryTree& Insert(const T& Data)
+	{
+		Node<T>* NewNode = new Node(Data);
+
+		if(Root == nullptr) 
+		{
+			Root = NewNode;
+		}
+		else
+		{
+			queue<Node<T>*> Q;
+			Q.push(Root);
+
+			while(!Q.empty())
+			{
+				Node<T>* Cur = Q.front();
+				Q.pop();
+
+				if(Cur->Left == nullptr)
+				{
+					Cur->Left = NewNode;
+					break;
+				}
+				else
+				{
+					Q.push(Cur->Left);
+				}
+
+				if(Cur->Right == nullptr)
+				{
+					Cur->Right = NewNode;
+					break;
+				}
+				else
+				{
+					Q.push(Cur->Right);
+				}
+			}
+		}
+
+		++Length;
+		return *this;
+	}
+
+	int Size() const
+	{
+		return Length++;
+	}
+
+	void Preorder()
+	{
+		Preorder(Root);
+		cout << '\n';
+	}
+	void Inorder()
+	{
+		Inorder(Root);
+		cout << '\n';
+	}
+	void Postorder()
+	{
+		Postorder(Root);
+		cout << '\n';
+	}
+
+private:
+	void Preorder(Node<T>* InNode)
+	{
+		if(InNode)
+		{
+			cout << InNode->Data << ' ';
+			Preorder(InNode->Left);
+			Preorder(InNode->Right);
+		}
+	}
+
+	void Inorder(Node<T>* InNode)
+	{
+		if(InNode)
+		{
+			Inorder(InNode->Left);
+			cout << InNode->Data << ' ';
+			Inorder(InNode->Right);
+		}
+	}
+
+	void Postorder(Node<T>* InNode)
+	{
+		if(InNode)
+		{
+			Postorder(InNode->Left);
+			Postorder(InNode->Right);
+			cout << InNode->Data << ' ';
+		}
+	}
+
+	Node<T>* Root;
+	int Length;
+};
+
+template<typename T>
+using BT = BinaryTree<T>;
+
+void BT_Test()
+{
+	cout << "------------- BT Test -------------" << '\n';
+	BT<int> BTree;
+	BTree.Insert(10);
+	BTree.Insert(20);
+	BTree.Insert(30);
+	BTree.Insert(40);
+	BTree.Preorder();
+}
+}
 
 namespace bst
 {
