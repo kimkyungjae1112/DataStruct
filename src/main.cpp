@@ -10,9 +10,10 @@ int main()
     array_my::Array_Test();
     list_my::SinglyLinkedList_Test();
     list_my::DoublyLinkedList_Test();
-    queue::Queue_Test();
-    queue::Deque_Test();
+    queue_my::Queue_Test();
+    queue_my::Deque_Test();
     stack::Stack_Test();
+    bt::BT_Test();
     bst::BST_Test();
     hashtable::OpenAddressingHashTable_Test();
 
