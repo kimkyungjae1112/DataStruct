@@ -19,7 +19,7 @@ template<typename T>
 class BinaryTree
 {
 public:
-	BinaryTree() : Root(nullptr), Size(0) {}
+	BinaryTree() : Root(nullptr), Length(0) {}
 
 	BinaryTree& Insert(const T& Data)
 	{
@@ -132,7 +132,14 @@ void BT_Test()
 	BTree.Insert(20);
 	BTree.Insert(30);
 	BTree.Insert(40);
+	cout << "BT 전위 순회 : ";
 	BTree.Preorder();
+
+	cout << "BT 중위 순회 : ";
+	BTree.Inorder();
+
+	cout << "BT 후위 순회 : ";
+	BTree.Postorder();
 }
 }
 
@@ -197,7 +204,7 @@ private:
 	Node<T>* Root;
 	int Height;
 
-	Node<T>* Insert(Node<T>* InNode, T Data)
+	Node<T>* Insert(Node<T>* InNode, const T& Data)
 	{
 		if (InNode == nullptr) return new Node(Data);
 		if (Search(InNode, Data)) return InNode;
@@ -214,7 +221,7 @@ private:
 		return InNode;
 	}
 
-	Node<T>* Remove(Node<T>* InNode, T Data)
+	Node<T>* Remove(Node<T>* InNode, const T& Data)
 	{
 		if (InNode == nullptr) return InNode;
 
@@ -259,7 +266,7 @@ private:
 		return Current;
 	}
 
-	bool Search(Node<T>* InNode, T Data)
+	bool Search(Node<T>* InNode, const T& Data)
 	{
 		if (InNode == nullptr) return false;
 		if (InNode->Data == Data) return true;
@@ -331,4 +338,145 @@ void BST_Test()
 	std::cout << "이진 탐색 트리 70 삭제 후 전위 순회 결과 : ";
 	Tree.Preorder(); // 5
 }
+}
+
+namespace heap
+{
+
+template<typename T>
+struct Node
+{
+	Node(T InData) : Data(InData), Parent(nullptr), Left(nullptr), Right(nullptr) {}
+
+	T Data;
+	Node<T>* Parent;
+	Node<T>* Left;
+	Node<T>* Right;
+};
+
+template<typename T>
+class Heap
+{
+public:
+	Heap() : Root(nullptr), Size(0) { } 
+
+	Heap& Insert(const T& Data)
+	{
+		Node<T>* NewNode = new Node(Data);
+
+		if(Root == nullptr) 
+		{
+			Root = NewNode;
+		}
+		else
+		{
+			queue<Node<T>*> Q;
+			Q.push(Root);
+
+			while(!Q.empty())
+			{
+				Node<T>* Cur = Q.front();
+				Q.pop();
+
+				if(Cur->Left == nullptr)
+				{
+					Cur->Left = NewNode;
+					Cur->Left->Parent = Cur;
+					break;
+				}
+				else
+				{
+					Q.push(Cur->Left);
+				}
+
+				if(Cur->Right == nullptr)
+				{
+					Cur->Right = NewNode;
+					Cur->Right->Parent = Cur;
+					break;
+				}
+				else
+				{
+					Q.push(Cur->Right);
+				}
+			}
+		}
+
+		MaxHeapSet(NewNode);
+		++Size;
+		return *this;
+	}
+
+	Heap& Preorder()
+	{
+		Preorder(Root);
+		cout << endl;
+		return *this;
+	}
+
+	Heap& Inorder()
+	{
+		Inorder(Root);
+		cout << endl;
+		return *this;
+	}
+
+	Heap& Postorder()
+	{
+		Postorder(Root);
+		cout << endl;
+		return *this;
+	}
+private:
+	int Size;
+	Node<T>* Root;
+
+	void MaxHeapSet(Node<T>* InNode)
+	{
+		Node<T>* Temp = InNode;
+		while (Temp->Parent && Temp->Data > Temp->Parent->Data) 
+		{
+			swap(Temp->Data, Temp->Parent->Data);
+			Temp = Temp->Parent;
+		}
+	}
+
+	void Preorder(Node<T>* InNode)
+	{
+		if (InNode != nullptr)
+		{
+			std::cout << InNode->Data << " ";
+			Preorder(InNode->Left);
+			Preorder(InNode->Right);
+		}
+	}
+
+	void Inorder(Node<T>* InNode)
+	{
+		if (InNode != nullptr)
+		{
+			Inorder(InNode->Left);
+			std::cout << InNode->Data << " ";
+			Inorder(InNode->Right);
+		}
+	}
+
+	void Postorder(Node<T>* InNode)
+	{
+		if (InNode != nullptr)
+		{
+			Postorder(InNode->Left);
+			Postorder(InNode->Right);
+			std::cout << InNode->Data << " ";
+		}
+	}
+};
+
+void Heap_Test()
+{
+	cout << "------------- Heap Test -------------" << endl;
+	Heap<int> Hp;
+	Hp.Insert(80).Preorder().Insert(50).Preorder().Insert(90).Preorder().Insert(100).Preorder().Insert(120).Preorder();
+}
+
 }
