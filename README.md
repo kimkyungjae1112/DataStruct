@@ -17,7 +17,7 @@ C++로 다양한 기본 자료구조를 직접 구현하고 정리한 프로젝�
   - 검색: `O(1)` (인덱스를 통한 접근)
   - 삽입/삭제: `O(N)` (중간 요소 이동 필요)
 
-🔗 [소스 코드 보기](https://github.com/kimkyungjae1112/DataStruct/blob/master/src/Array.h)
+🔗 [소스 코드 보기](https://github.com/kimkyungjae1112/DataStruct/blob/master/Array/Array.h)
 
 ---
 <br>
@@ -38,7 +38,7 @@ C++로 다양한 기본 자료구조를 직접 구현하고 정리한 프로젝�
   - 검색: `O(N)`
   - 삽입/삭제: `O(1)` *(단, 노드를 찾는 데는 `O(N)`)*
   
-🔗 [소스 코드 보기](https://github.com/kimkyungjae1112/DataStruct/blob/master/src/List.h)
+🔗 [소스 코드 보기](https://github.com/kimkyungjae1112/DataStruct/blob/master/List/List.h)
 
 ---
 <br>
@@ -55,7 +55,7 @@ C++로 다양한 기본 자료구조를 직접 구현하고 정리한 프로젝�
   - 삽입/삭제: `O(1)`
   - 조회: `O(N)`
 
-🔗 [소스 코드 보기](https://github.com/kimkyungjae1112/DataStruct/blob/master/src/Stack.h)
+🔗 [소스 코드 보기](https://github.com/kimkyungjae1112/DataStruct/tree/master/Stack/Stack.h)
 
 ---
 <br>
@@ -76,7 +76,7 @@ C++로 다양한 기본 자료구조를 직접 구현하고 정리한 프로젝�
   - 삽입/삭제: `O(1)`
   - 검색: `O(N)`
 
-🔗 [소스 코드 보기](https://github.com/kimkyungjae1112/DataStruct/blob/master/src/Queue.h)
+🔗 [소스 코드 보기](https://github.com/kimkyungjae1112/DataStruct/blob/master/Queue/Queue.h)
 
 ---
 <br>
@@ -94,7 +94,7 @@ C++로 다양한 기본 자료구조를 직접 구현하고 정리한 프로젝�
   - 평균: 검색/삽입/삭제 `O(1)`
   - 최악: `O(N)` (충돌 심한 경우)
 
-🔗 [소스 코드 보기](https://github.com/kimkyungjae1112/DataStruct/blob/master/src/HashTable.h)
+🔗 [소스 코드 보기](https://github.com/kimkyungjae1112/DataStruct/blob/master/HashTable/HashTable.h)
 
 ---
 <br>
@@ -114,4 +114,5 @@ C++로 다양한 기본 자료구조를 직접 구현하고 정리한 프로젝�
 - **시간복잡도** *(균형 트리 기준)*:
   - 검색/삽입/삭제: `O(log N)`
 
-🔗 [소스 코드 보기](https://github.com/kimkyungjae1112/DataStruct/blob/master/src/BinarySearchTree.h)
+🔗 [소스 코드 보기](https://github.com/kimkyungjae1112/DataStruct/blob/master/Tree/Tree.h)
+🔗 [설명 보기](https://github.com/kimkyungjae1112/DataStruct/tree/master/Tree)
