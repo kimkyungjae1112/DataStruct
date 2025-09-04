@@ -15,7 +15,12 @@ int main()
     stack::Stack_Test();
     bt::BT_Test();
     bst::BST_Test();
+<<<<<<< HEAD
     hashtable::HashTableTest();
+=======
+    heap::Heap_Test();
+    hashtable::OpenAddressingHashTable_Test();
+>>>>>>> 720c39733c4af7476125b63f26e07993ca1f582a
 
     return 0;
 }
