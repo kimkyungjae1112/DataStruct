@@ -6,211 +6,173 @@ using namespace std;
 namespace hashtable
 {
 
-enum class SlotState
+template<typename T>
+struct FBucket
 {
-    Empty,
-    Occupied,
-    Deleted
+	string Key;
+	T Data;
+	bool bHasElement = false; 
 };
 
-template<typename K, typename V>
-struct Entry
+template<typename T>
+class HashTable
 {
-    K Key;
-    V Value;
-    SlotState State = SlotState::Empty;
-};
-
-template<typename K, typename V, typename Hash = std::hash<K>>
-class OpenAddressingHashTable
-{
-public:
-    OpenAddressingHashTable(int Size = DefaultSize) : Table(Size) { }
-
-    void Insert(const K& Key, const V& Value)
-    {
-        int Index = GetIndex(Key);
-        int OriginalIndex = Index;
-        int FirstDeleted = -1;
-
-        while (true)
-        {
-            auto& Slot = Table[Index];
-
-            if (Slot.State == SlotState::Empty)
-            {
-                if (FirstDeleted != -1)
-                {
-                    Index = FirstDeleted;
-                }
-                Table[Index] = { Key, Value, SlotState::Occupied };
-                Length++;
-                return;
-            }
-            else if (Slot.State == SlotState::Deleted)
-            {
-                if (FirstDeleted == -1)
-                {
-                    FirstDeleted = Index;
-                }
-            }
-            else if (Slot.State == SlotState::Occupied && Slot.Key == Key)
-            {
-                Slot.Value = Value;
-                return;
-            }
-
-            Index = (Index + 1) % Table.size();
-            if (Index == OriginalIndex)
-            {
-                break;
-            }
-        }
-
-        cerr << "Hash Table Is Full!\n";
-    }
-
-    const V& Search(const K& Key)
-    {
-        int Index = GetIndex(Key);
-        int OriginalIndex = Index;
-
-        while (Table[Index].State != SlotState::Empty)
-        {
-            const auto& Slot = Table[Index];
-            if (Slot.State == SlotState::Occupied && Slot.Key == Key)
-            {
-                return Slot.Value;
-            }
-
-            Index = (Index + 1) % Table.size();
-            if (Index == OriginalIndex)
-            {
-                break; 
-            }
-        }
-
-        throw std::out_of_range("Key not found in hash table");
-    }
-
-    bool Get(const K& Key, V& OutValue) const
-    {
-        int Index = GetIndex(Key);
-        int OriginalIndex = Index;
-
-        while (Table[Index].State != SlotState::Empty)
-        {
-            const auto& Slot = Table[Index];
-            if (Slot.State == SlotState::Occupied && Slot.Key == Key)
-            {
-                OutValue = Slot.Value;
-                return true;
-            }
-
-            Index = (Index + 1) % Table.size();
-            if (Index == OriginalIndex)
-            {
-                break;
-            }
-        }
-
-        return false;
-    }
-
-    bool Remove(const K& Key)
-    {
-        int Index = GetIndex(Key);
-        int OriginalIndex = Index;
-
-        while (Table[Index].State != SlotState::Empty)
-        {
-            auto& Slot = Table[Index];
-            if (Slot.State == SlotState::Occupied && Slot.Key == Key)
-            {
-                Slot.State = SlotState::Deleted;
-                Length--;
-                return true;
-            }
-
-            Index = (Index + 1) % Table.size();
-            if (Index == OriginalIndex)
-            {
-                break;
-            }
-        }
-
-        return false;
-    }
-
-    int Size() const
-    {
-        return Length;
-    }
-
-    void Print() const
-    {
-        for (size_t I = 0; I < Table.size(); ++I)
-        {
-            const auto& Slot = Table[I];
-            cout << "[" << I << "] ";
-            if (Slot.State == SlotState::Empty)
-            {
-                cout << "Empty\n";
-            }
-            else if (Slot.State == SlotState::Deleted)
-            {
-                cout << "Deleted\n";
-            }
-            else
-            {
-                cout << "(" << Slot.Key << ", " << Slot.Value << ")\n";
-            }
-        }
-    }
-
 private:
-    static const int DefaultSize = 10;
-    vector<Entry<K, V>> Table;
-    Hash Hasher;
-    int Length = 0;
+	FBucket<T>* Buckets; 
+	int Capacity;       
+	int Size;           
 
-    int GetIndex(const K& Key) const
-    {
-        return Hasher(Key) % Table.size();
-    }
+	int Hash(const string& Key)
+	{
+		if (Capacity == 0)
+		{
+			return 0;
+		}
+
+		int Index = 0;
+		for (char K : Key)
+		{
+			Index += K;
+		}
+		return Index % Capacity; 
+	}
+
+public:
+	HashTable(int N) : Capacity(N), Size(0)
+	{
+		if (N <= 0)
+		{
+			Buckets = nullptr;
+			Capacity = 0;
+			return;
+		}
+		Buckets = new FBucket<T>[Capacity];
+	}
+
+	~HashTable()
+	{
+		delete[] Buckets;
+	}
+
+	HashTable(const HashTable&) = delete;
+	HashTable& operator=(const HashTable&) = delete;
+
+
+	void Add(const string& Key, T Value)
+	{
+		if (Capacity == 0)
+		{
+			cout << "Error: HashTable has zero capacity." << endl;
+			return;
+		}
+
+		if (Size >= Capacity)
+		{
+			cout << "Error: HashTable is full." << endl;
+			return;
+		}
+
+		int Index = Hash(Key);
+
+		// 선형 탐사(Linear Probing): 충돌 발생 시 다음 칸으로 이동
+		while (true)
+		{
+			// Case 1: 비어있는 버킷을 찾은 경우 (새로운 데이터 삽입)
+			if (!Buckets[Index].bHasElement)
+			{
+				Buckets[Index].Key = Key;
+				Buckets[Index].Data = Value;
+				Buckets[Index].bHasElement = true;
+				Size++;
+				return;
+			}
+			// Case 2: 동일한 Key를 가진 버킷을 찾은 경우 (데이터 업데이트)
+			else if (Buckets[Index].Key == Key)
+			{
+				Buckets[Index].Data = Value;
+				return;
+			}
+
+			// 다음 인덱스로 이동 (배열 끝에 도달하면 처음으로 돌아감)
+			Index = (Index + 1) % Capacity;
+		}
+	}
+
+	bool Get(const string& Key, T& OutValue)
+	{
+		if (Capacity == 0)
+		{
+			return false;
+		}
+
+		int StartIndex = Hash(Key);
+		int Index = StartIndex;
+
+		while (true)
+		{
+			// Case 1: 비어있는 버킷을 만난 경우 -> 찾는 Key가 테이블에 없음
+			if (!Buckets[Index].bHasElement)
+			{
+				return false;
+			}
+			// Case 2: 동일한 Key를 가진 버킷을 찾은 경우
+			else if (Buckets[Index].Key == Key)
+			{
+				OutValue = Buckets[Index].Data; // 찾은 값을 OutValue에 복사
+				return true;
+			}
+
+			// 다음 인덱스로 이동
+			Index = (Index + 1) % Capacity;
+
+			// 한 바퀴를 모두 돌았는데 못 찾은 경우 (테이블이 꽉 찼을 때)
+			if (Index == StartIndex)
+			{
+				return false;
+			}
+		}
+	}
 };
 
-
-void OpenAddressingHashTable_Test()
+void HashTableTest()
 {
-    cout << "------------- Open Addressing HashTable Test -------------\n";
-    OpenAddressingHashTable<string, int> HT;
+	cout << "HashTable(10) 생성" << endl;
+	HashTable<int> HT(10);
 
-    HT.Insert("Apple", 100);
-    HT.Insert("Banana", 200);
-    HT.Insert("Orange", 300);
-    HT.Insert("Apple", 123); 
+	cout << "\n--- 데이터 추가 ---" << endl;
+	HT.Add("Apple", 100);
+	HT.Add("Orange", 200);
+	HT.Add("Banana", 300);
+	HT.Add("Grape", 400); 
 
-    HT.Print();
+	cout << "\n--- 데이터 조회 ---" << endl;
+	int FoundValue;
+	if (HT.Get("Apple", FoundValue))
+	{
+		cout << "Found Apple -> " << FoundValue << endl;
+	}
+	if (HT.Get("Grape", FoundValue))
+	{
+		cout << "Found Grape -> " << FoundValue << endl;
+	}
 
-    cout << "\n-- 바나나 삭제 --\n";
-    HT.Remove("Banana");
+	cout << "\n--- 데이터 업데이트 ---" << endl;
+	cout << "Updating Apple's value to 150..." << endl;
+	HT.Add("Apple", 150);
+	if (HT.Get("Apple", FoundValue))
+	{
+		cout << "Found Apple -> " << FoundValue << endl;
+	}
 
-    HT.Print();
-
-    cout << "\n-- 포도 삭제 --\n";
-    HT.Insert("Grape", 555); 
-
-    HT.Print();
-
-    int Value;
-    if (HT.Get("Apple", Value))
-    {
-        cout << "\n[Get] Apple: " << Value << '\n';
-    }
-
-    cout << "Apple Value : " << HT.Search("Apple") << '\n';
-
+	cout << "\n--- 없는 데이터 조회 ---" << endl;
+	if (HT.Get("Cherry", FoundValue))
+	{
+		cout << "Found Cherry -> " << FoundValue << endl;
+	}
+	else
+	{
+		cout << "Could not find Cherry." << endl;
+	}
 }
 
 }

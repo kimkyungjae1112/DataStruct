@@ -130,118 +130,95 @@ private:
     int Length;
 };
 
-template <typename T>
-struct DoubleNode
+template<typename T>
+struct Node
 {
 public:
-    DoubleNode(T InData) : Data(InData), Next(nullptr), Prev(nullptr) { }
+	Node(T InData) : Data(InData), Next(nullptr), Prev(nullptr) {}
 
-    T Data;
-    DoubleNode* Next;
-    DoubleNode* Prev;
+	T Data;
+	Node* Next;
+	Node* Prev;
 };
 
 template <typename T>
 class DoublyLinkedList
 {
 public:
-    DoublyLinkedList() : Head(nullptr), Length(0) { }
+    DoublyLinkedList() : Head(nullptr), Tail(nullptr), Length(0) {}
 
     DoublyLinkedList& PushBack(T Data)
     {
-        DoubleNode<T>* NewNode = new DoubleNode(Data);
+        Node<T>* NewNode = new Node(Data);
 
-        if(!Head)
+        if (Head == nullptr)
         {
-            Head = NewNode;
-            Length++;
-            return *this;
+            Head = Tail = NewNode;
+        }
+        else
+        {
+            NewNode->Prev = Tail;
+            NewNode->Next = nullptr;
+            Tail->Next = NewNode;
+            Tail = NewNode;
         }
 
-        DoubleNode<T>* TempNode = Head;
-        while(TempNode->Next)
-        {
-            TempNode = TempNode->Next;
-        }
-        TempNode->Next = NewNode;
-        NewNode->Prev = TempNode;
         Length++;
         return *this;
     }
 
-    DoublyLinkedList& Insert(T Loc, T Data)
+    DoublyLinkedList& PushFront(T Data)
     {
-        DoubleNode<T>* NewNode = new DoubleNode(Data);
+	Node<T>* NewNode = new Node(Data);
 
-        if(!Head)
-        {
-            Head = NewNode;
-            Length++;
-            return *this;
-        }
+	if (Head == nullptr)
+	{
+		Head = Tail = NewNode;
+	}
+	else
+	{
+		NewNode->Next = Head;
+		NewNode->Prev = nullptr;
+		Head->Prev = NewNode;
+		Head = NewNode;
+	}
 
-        DoubleNode<T>* TempNode = Head;
-        while (TempNode)
-        {
-            if (TempNode->Data == Loc)
-            {
-                if (TempNode == Head)
-                {
-                    NewNode->Next = Head;
-                    Head->Prev = NewNode;
-                    Head = NewNode;
-                }
-                else
-                {
-                    NewNode->Next = TempNode;
-                    NewNode->Prev = TempNode->Prev;
-                    TempNode->Prev->Next = NewNode;
-                    TempNode->Prev = NewNode;
-                }
-                Length++;
-                return *this;
-            }
+	Length++;
+	return *this;
+    }
 
-            TempNode = TempNode->Next;
-        }
+    DoublyLinkedList& PopBack()
+    {
+        Node<T>* Temp = Tail;
+        Tail = Tail->Prev;
+        Tail->Next = nullptr;
+
+        delete Temp;
+
+        Length--;
         return *this;
     }
 
-    DoublyLinkedList& Erase(T Loc)
+    DoublyLinkedList& PopFront()
     {
-        DoubleNode<T>* TempNode = Head;
-        while(TempNode)
-        {
-            if(TempNode->Data == Loc)
-            {
-                Head = Head->Next;
-                delete TempNode;
-                Length--;
-                return *this;
-            }
-            else if(TempNode->Next && TempNode->Next->Data == Loc)
-            {
-                DoubleNode<T>* Temp = TempNode->Next;
-                TempNode->Next = TempNode->Next->Next;
-                TempNode->Next->Prev = TempNode;
-                delete Temp;
-                Length--;
-                return *this;
-            }
-            TempNode = TempNode->Next;
-        }
+        Node<T>* Temp = Head;
+        Head = Head->Next;
+        Head->Prev = nullptr;
+
+        delete Temp;
+
+        Length--;
         return *this;
     }
 
-    bool Search(T Loc) const
+    T Back() const
     {
-        DoubleNode<T>* TempNode = Head;
-        while(TempNode)
-        {
-            if(TempNode->Data == Loc) return true;
-            TempNode = TempNode->Next;
-        }
-        return *this;
+        return Tail->Data;
+    }
+
+    T Front() const
+    {
+        return Head->Data;
     }
 
     int Size() const
@@ -251,17 +228,18 @@ public:
 
     void Print() const
     {
-        DoubleNode<T>* TempNode = Head;
-        while(TempNode)
+        Node<T>* Temp = Head;
+
+        while (Temp)
         {
-            cout << TempNode->Data << ' ';
-            TempNode = TempNode->Next;
+            cout << Temp->Data << " ";
+            Temp = Temp->Next;
         }
-        TempNode = nullptr;
     }
 
 private:
-    DoubleNode<T>* Head;
+    Node<T>* Head;
+    Node<T>* Tail;
     int Length;
 };
 
@@ -282,14 +260,28 @@ void SinglyLinkedList_Test()
 void DoublyLinkedList_Test()
 {
     cout << "------------- DoublyLinkedList Test -------------" << '\n';
-    DoublyLinkedList<int> DLL;
-    DLL.PushBack(1).PushBack(2).PushBack(3);
-    DLL.Insert(1, 100);
-    DLL.Insert(2, 150);
-    DLL.Insert(3, 200);
-    DLL.Erase(150);
-    DLL.Erase(100);
-    DLL.Print();
-    cout << '\n' << DLL.Size() << '\n';
+    DoublyLinkedList<int> DL;
+    DL.PushBack(10);
+    DL.PushBack(20);
+    DL.PushBack(30);
+    DL.Print();
+    cout << endl;
+
+    DL.PushFront(100);
+    DL.PushFront(200);
+    DL.PushFront(300);
+    DL.Print();
+    cout << endl;
+
+    DL.PopFront();
+    DL.Print();
+    cout << endl;
+
+    DL.PopBack();
+    DL.Print();
+    cout << endl;
+
+    cout << DL.Front() << " " << DL.Back() << endl;
 }
+
 }

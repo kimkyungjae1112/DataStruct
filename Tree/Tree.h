@@ -19,7 +19,7 @@ template<typename T>
 class BinaryTree
 {
 public:
-	BinaryTree() : Root(nullptr), Size(0) {}
+	BinaryTree() : Root(nullptr), Length(0) {}
 
 	BinaryTree& Insert(const T& Data)
 	{

@@ -15,7 +15,7 @@ int main()
     stack::Stack_Test();
     bt::BT_Test();
     bst::BST_Test();
-    hashtable::OpenAddressingHashTable_Test();
+    hashtable::HashTableTest();
 
     return 0;
 }
